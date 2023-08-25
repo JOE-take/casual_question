@@ -1,7 +1,8 @@
 package main
 
-import "fmt"
+import "casual_question/db"
 
 func main() {
-	fmt.Println("hello")
+	db := db.InitializeDB()
+
 }
