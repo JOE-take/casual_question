@@ -46,7 +46,7 @@ func (r UserRepository) ReadByEmail(u *models.User) (*models.User, error) {
 	result := &models.User{}
 
 	row := db.QueryRow("select * from Users where email = ?", u.Email)
-	if err := row.Scan(result); err != nil {
+	if err := row.Scan(&result.UserID, &result.UserName, &result.Email, &result.Password); err != nil {
 		return nil, err
 	}
 

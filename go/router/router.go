@@ -18,6 +18,7 @@ func NewRouter(db *sql.DB) *gin.Engine {
 	userController := handlers.NewUserController(userRepository)
 
 	r.POST("/signup", userController.Signup)
+	r.POST("/login", userController.Login)
 
 	return r
 }

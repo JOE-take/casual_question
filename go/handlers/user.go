@@ -4,6 +4,8 @@ import (
 	"casual_question/models"
 	"casual_question/repository"
 	"casual_question/utility"
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -51,28 +53,28 @@ func (con UserController) Login(c *gin.Context) {
 	requestUser := &models.User{}
 	err := c.ShouldBindJSON(requestUser)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{})
+		fmt.Println("a")
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
 	existingUser, err := con.userModelRepository.ReadByEmail(requestUser)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{})
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
 	if existingUser.Email != requestUser.Email {
-		c.JSON(http.StatusBadRequest, gin.H{})
-		return
-	}
-
-	if ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password); ok && existingUser.Email == requestUser.Email {
+		err := errors.New("email doesn't match")
+		fmt.Println("c")
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
 	ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password)
 	if !ok {
+		fmt.Println("d")
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
