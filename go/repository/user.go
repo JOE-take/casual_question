@@ -8,6 +8,7 @@ import (
 
 type UserRepositorier interface {
 	Create(u *models.User) error
+	ReadByEmail(i *models.User) (*models.User, error)
 }
 
 type UserRepository struct {
@@ -38,4 +39,16 @@ func (r UserRepository) Create(u *models.User) error {
 		return errors.New("user already exist")
 	}
 	return nil
+}
+
+func (r UserRepository) ReadByEmail(u *models.User) (*models.User, error) {
+	db := r.repo
+	result := &models.User{}
+
+	row := db.QueryRow("select * from Users where email = ?", u.Email)
+	if err := row.Scan(result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

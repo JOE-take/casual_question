@@ -46,3 +46,36 @@ func (con UserController) Signup(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{})
 }
+
+func (con UserController) Login(c *gin.Context) {
+	requestUser := &models.User{}
+	err := c.ShouldBindJSON(requestUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+
+	existingUser, err := con.userModelRepository.ReadByEmail(requestUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+
+	if existingUser.Email != requestUser.Email {
+		c.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+
+	if ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password); ok && existingUser.Email == requestUser.Email {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}
