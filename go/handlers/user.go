@@ -24,6 +24,7 @@ func (con UserController) Signup(c *gin.Context) {
 	err := c.ShouldBindJSON(user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
 	}
 
 	// uuidでUserIDを生成して付与
@@ -33,12 +34,14 @@ func (con UserController) Signup(c *gin.Context) {
 	user.Password, err = utility.HashingPassword(user.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
 	}
 
 	// レコードの作成
 	err = con.userModelRepository.Create(user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{})
