@@ -39,8 +39,8 @@ func GenerateAccessToken(u *models.User) (string, error) {
 	return token, err
 }
 
-// ParseJWTToken トークンを解析してClaimsとエラーを返す解析器
-func ParseJWTToken(tokenString string) (*Claims, error) {
+// ParseAccessToken アクセストークンを解析してClaimsとエラーを返す解析器
+func ParseAccessToken(tokenString string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtSecret), nil
 	})
