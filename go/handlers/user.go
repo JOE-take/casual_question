@@ -51,6 +51,8 @@ func (con UserController) Signup(c *gin.Context) {
 
 func (con UserController) Login(c *gin.Context) {
 	requestUser := &models.User{}
+
+	// unmarshall
 	err := c.ShouldBindJSON(requestUser)
 	if err != nil {
 		fmt.Println("a")
@@ -58,6 +60,7 @@ func (con UserController) Login(c *gin.Context) {
 		return
 	}
 
+	// レコードの読み出し
 	existingUser, err := con.userModelRepository.ReadByEmail(requestUser)
 	if err != nil {
 		fmt.Println(err)
@@ -65,6 +68,7 @@ func (con UserController) Login(c *gin.Context) {
 		return
 	}
 
+	// メアドチェック
 	if existingUser.Email != requestUser.Email {
 		err := errors.New("email doesn't match")
 		fmt.Println("c")
@@ -72,6 +76,7 @@ func (con UserController) Login(c *gin.Context) {
 		return
 	}
 
+	// パスワードチェック
 	ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password)
 	if !ok {
 		fmt.Println("d")
