@@ -81,7 +81,7 @@ func (con UserController) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := utility.GenerateToken(existingUser)
+	token, err := utility.GenerateAccessToken(existingUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

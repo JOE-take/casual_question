@@ -16,8 +16,8 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-// GenerateToken 指定されたユーザ情報でトークンを生成する生成器
-func GenerateToken(u *models.User) (string, error) {
+// GenerateAccessToken 指定されたユーザ情報でトークンを生成する生成器
+func GenerateAccessToken(u *models.User) (string, error) {
 
 	claims := Claims{
 		u.UserID,
@@ -39,8 +39,8 @@ func GenerateToken(u *models.User) (string, error) {
 	return token, err
 }
 
-// ParseToken トークンを解析してClaimsとエラーを返す解析器
-func ParseToken(tokenString string) (*Claims, error) {
+// ParseJWTToken トークンを解析してClaimsとエラーを返す解析器
+func ParseJWTToken(tokenString string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtSecret), nil
 	})
