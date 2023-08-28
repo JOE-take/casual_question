@@ -42,7 +42,7 @@ func GenerateToken(u *models.User) (string, error) {
 // ParseToken トークンを解析してClaimsとエラーを返す解析器
 func ParseToken(tokenString string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
+		return []byte(jwtSecret), nil
 	})
 
 	if tokenClaims != nil {
