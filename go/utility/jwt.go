@@ -25,7 +25,7 @@ func GenerateToken(u *models.User) (string, error) {
 		u.Email,
 		jwt.StandardClaims{
 			Issuer:    "cq-api",
-			Subject:   "auth",
+			Subject:   "AccessToken",
 			Audience:  "cq-front",
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
 			IssuedAt:  time.Now().Unix(),
