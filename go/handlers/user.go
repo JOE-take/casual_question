@@ -25,7 +25,7 @@ func (con UserController) Signup(c *gin.Context) {
 	// unmarshal
 	err := c.ShouldBindJSON(user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -35,14 +35,14 @@ func (con UserController) Signup(c *gin.Context) {
 	// パスワードのハッシュ化
 	user.Password, err = utility.HashingPassword(user.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// レコードの作成
 	err = con.userModelRepository.Create(user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -51,33 +51,52 @@ func (con UserController) Signup(c *gin.Context) {
 
 func (con UserController) Login(c *gin.Context) {
 	requestUser := &models.User{}
+
+	// unmarshall
 	err := c.ShouldBindJSON(requestUser)
 	if err != nil {
-		fmt.Println("a")
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// レコードの読み出し
 	existingUser, err := con.userModelRepository.ReadByEmail(requestUser)
 	if err != nil {
 		fmt.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// メアドチェック
 	if existingUser.Email != requestUser.Email {
 		err := errors.New("email doesn't match")
-		fmt.Println("c")
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// パスワードチェック
 	ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password)
 	if !ok {
-		fmt.Println("d")
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	token, err := utility.GenerateToken(existingUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"Token": token})
 }
+
+//func (con *UserController) Check(c *gin.Context) {
+//	token := c.GetHeader("Authorization")
+//	token = token[7:]
+//	claims, err := utility.ParseToken(token)
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	c.JSON(200, claims)
+//}
