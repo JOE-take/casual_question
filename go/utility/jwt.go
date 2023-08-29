@@ -53,3 +53,34 @@ func ParseAccessToken(tokenString string) (*Claims, error) {
 
 	return nil, err
 }
+
+func GenerateRefreshToken() (string, error) {
+	claims := jwt.StandardClaims{
+		Issuer:    "cp-api",
+		Subject:   "RefreshToken",
+		Audience:  "cp-front",
+		ExpiresAt: time.Now().Add(time.Hour).Unix(),
+		IssuedAt:  time.Now().Unix(),
+		Id:        uuid.NewString(),
+	}
+
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := tokenClaims.SignedString([]byte(jwtSecret))
+
+	return token, err
+}
+
+func ValidateRefreshToken(tokenString string) (bool, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(jwtSecret), nil
+	})
+
+	if token != nil {
+		_, ok := token.Claims.(*jwt.StandardClaims)
+		if ok && token.Valid {
+			return true, nil
+		}
+	}
+
+	return false, err
+}

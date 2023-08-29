@@ -19,7 +19,6 @@ func NewRouter(db *sql.DB) *gin.Engine {
 
 	r.POST("/signup", userController.Signup)
 	r.POST("/login", userController.Login)
-	//r.GET("/check", userController.Check)
 
 	return r
 }

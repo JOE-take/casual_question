@@ -81,22 +81,11 @@ func (con UserController) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := utility.GenerateAccessToken(existingUser)
+	accessToken, err := utility.GenerateAccessToken(existingUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Token": token})
+	c.JSON(http.StatusOK, gin.H{"AccessToken": accessToken})
 }
-
-//func (con *UserController) Check(c *gin.Context) {
-//	token := c.GetHeader("Authorization")
-//	token = token[7:]
-//	claims, err := utility.ParseToken(token)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	c.JSON(200, claims)
-//}
