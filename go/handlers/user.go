@@ -86,6 +86,13 @@ func (con UserController) Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	refreshToken, err := util.GenerateRefreshToken()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 
-	c.JSON(http.StatusOK, gin.H{"AccessToken": accessToken})
+	c.JSON(http.StatusOK, gin.H{
+		"AccessToken":  accessToken,
+		"RefreshToken": refreshToken,
+	})
 }
