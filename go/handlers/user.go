@@ -3,7 +3,7 @@ package handlers
 import (
 	"casual_question/models"
 	"casual_question/repository"
-	"casual_question/utility"
+	"casual_question/util"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -33,7 +33,7 @@ func (con UserController) Signup(c *gin.Context) {
 	user.UserID = uuid.New().String()
 
 	// パスワードのハッシュ化
-	user.Password, err = utility.HashingPassword(user.Password)
+	user.Password, err = util.HashingPassword(user.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -75,28 +75,24 @@ func (con UserController) Login(c *gin.Context) {
 	}
 
 	// パスワードチェック
-	ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password)
+	ok, err := util.ValidPassword(existingUser.Password, requestUser.Password)
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	token, err := utility.GenerateToken(existingUser)
+	accessToken, err := util.GenerateAccessToken(existingUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	refreshToken, err := util.GenerateRefreshToken()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 
-	c.JSON(http.StatusOK, gin.H{"Token": token})
+	c.JSON(http.StatusOK, gin.H{
+		"AccessToken":  accessToken,
+		"RefreshToken": refreshToken,
+	})
 }
-
-//func (con *UserController) Check(c *gin.Context) {
-//	token := c.GetHeader("Authorization")
-//	token = token[7:]
-//	claims, err := utility.ParseToken(token)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	c.JSON(200, claims)
-//}
