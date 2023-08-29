@@ -1,4 +1,4 @@
-package utility
+package util
 
 import (
 	"casual_question/models"

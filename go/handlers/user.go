@@ -3,7 +3,7 @@ package handlers
 import (
 	"casual_question/models"
 	"casual_question/repository"
-	"casual_question/utility"
+	"casual_question/util"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -33,7 +33,7 @@ func (con UserController) Signup(c *gin.Context) {
 	user.UserID = uuid.New().String()
 
 	// パスワードのハッシュ化
-	user.Password, err = utility.HashingPassword(user.Password)
+	user.Password, err = util.HashingPassword(user.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -75,13 +75,13 @@ func (con UserController) Login(c *gin.Context) {
 	}
 
 	// パスワードチェック
-	ok, err := utility.ValidPassword(existingUser.Password, requestUser.Password)
+	ok, err := util.ValidPassword(existingUser.Password, requestUser.Password)
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	accessToken, err := utility.GenerateAccessToken(existingUser)
+	accessToken, err := util.GenerateAccessToken(existingUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
