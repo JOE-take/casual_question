@@ -15,10 +15,12 @@ func NewRouter(db *sql.DB) *gin.Engine {
 	})
 
 	userRepository := repository.NewUserRepository(db)
-	userController := handlers.NewUserController(userRepository)
+	refTokenRepository := repository.NewRefRepository(db)
+	userController := handlers.NewUserController(userRepository, refTokenRepository)
 
 	r.POST("/signup", userController.Signup)
 	r.POST("/login", userController.Login)
+	r.GET("/refresh", userController.Refresh)
 
 	return r
 }

@@ -8,7 +8,8 @@ import (
 
 type UserRepositorier interface {
 	Create(u *models.User) error
-	ReadByEmail(i *models.User) (*models.User, error)
+	ReadByEmail(u *models.User) (*models.User, error)
+	ReadByID(id string) (*models.User, error)
 }
 
 type UserRepository struct {
@@ -46,6 +47,18 @@ func (r UserRepository) ReadByEmail(u *models.User) (*models.User, error) {
 	result := &models.User{}
 
 	row := db.QueryRow("select * from Users where email = ?", u.Email)
+	if err := row.Scan(&result.UserID, &result.UserName, &result.Email, &result.Password); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (r UserRepository) ReadByID(id string) (*models.User, error) {
+	db := r.repo
+	result := &models.User{}
+
+	row := db.QueryRow("select * from Users where user_id = ?", id)
 	if err := row.Scan(&result.UserID, &result.UserName, &result.Email, &result.Password); err != nil {
 		return nil, err
 	}
