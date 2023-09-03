@@ -9,7 +9,7 @@ import (
 
 const (
 	MaxRetry = 5
-	WaitTime = 5
+	WaitTime = 10
 )
 
 func InitializeDB() *sql.DB {

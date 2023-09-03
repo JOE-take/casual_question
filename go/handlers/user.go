@@ -12,11 +12,15 @@ import (
 )
 
 type UserController struct {
-	userModelRepository repository.UserRepositorier
+	userModelRepository     repository.UserRepositorier
+	refTokenModelRepository repository.RefTokenRepositorier
 }
 
-func NewUserController(repo repository.UserRepositorier) *UserController {
-	return &UserController{userModelRepository: repo}
+func NewUserController(userRepo repository.UserRepositorier, refTokenRepo repository.RefTokenRepositorier) *UserController {
+	return &UserController{
+		userModelRepository:     userRepo,
+		refTokenModelRepository: refTokenRepo,
+	}
 }
 
 func (con UserController) Signup(c *gin.Context) {
@@ -86,9 +90,22 @@ func (con UserController) Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	refreshToken, err := util.GenerateRefreshToken()
+	refreshToken, exp, err := util.GenerateRefreshToken()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// リフレッシュトークンの情報をDBに挿入
+	token := &models.RefreshToken{
+		Token:  refreshToken,
+		UserID: existingUser.UserID,
+		Expiry: exp,
+	}
+	err = con.refTokenModelRepository.Create(token)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
