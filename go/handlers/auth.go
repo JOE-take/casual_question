@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"casual_question/models"
 	"casual_question/util"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -45,10 +46,21 @@ func (con UserController) Refresh(c *gin.Context) {
 	}
 
 	// 新しいリフレッシュトークンを生成
-	newRefreshToken, _, err := util.GenerateRefreshToken()
+	newRefreshToken, exp, err := util.GenerateRefreshToken()
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
+	}
+
+	// 新しいリフレッシュトークンの情報をDBに登録
+	newTokenInfo := &models.RefreshToken{
+		Token:  newRefreshToken,
+		UserID: userInfo.UserID,
+		Expiry: exp,
+	}
+	err = con.refTokenModelRepository.Create(newTokenInfo)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 	}
 
 	// 古いリフレッシュトークンを削除
