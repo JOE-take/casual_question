@@ -3,10 +3,12 @@ package repository
 import (
 	"casual_question/models"
 	"database/sql"
+	"errors"
 )
 
 type RefTokenRepositorier interface {
 	Create(t *models.RefreshToken) error
+	Delete(token string) error
 	ReadByToken(token string) (*models.RefreshToken, error)
 }
 
@@ -28,6 +30,31 @@ func (r RefRepository) Create(t *models.RefreshToken) error {
 
 	_, err = insert.Exec(t.Token, t.UserID, t.Expiry)
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r RefRepository) Delete(token string) error {
+	db := r.repo
+	delete, err := db.Prepare("delete from RefreshTokens where token = ?")
+	if err != nil {
+		return err
+	}
+
+	result, err := delete.Exec(token)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affectedRows == 0 {
+		err := errors.New("no matching token found")
 		return err
 	}
 
