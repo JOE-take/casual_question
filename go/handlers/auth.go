@@ -51,6 +51,12 @@ func (con UserController) Refresh(c *gin.Context) {
 		return
 	}
 
+	// 古いリフレッシュトークンを削除
+	err = con.refTokenModelRepository.Delete(refreshToken)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"AccessToken":  newAccessToken,
 		"RefreshToken": newRefreshToken,
