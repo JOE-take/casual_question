@@ -57,7 +57,7 @@ func ParseAccessToken(tokenString string) (*Claims, error) {
 // GenerateRefreshToken () (tokenString string, expiry, err error)
 // expiry はUnix時間
 func GenerateRefreshToken() (string, int64, error) {
-	exp := time.Now().Add(time.Hour).Unix()
+	exp := time.Now().Add(48 * time.Hour).Unix()
 	claims := jwt.StandardClaims{
 		Issuer:    "cp-api",
 		Subject:   "RefreshToken",
