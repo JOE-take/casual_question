@@ -9,10 +9,12 @@ create table Users(
 );
 
 create table Channels(
-    channel_id varchar(256) primary key
+    channel_id varchar(256) primary key,
+    owner varchar(256) not null,
+    foreign key (owner) references Users(user_id)
 );
 
-create table Posts(
+create table Questions(
     channel_id  varchar(256) not null ,
     id          int primary key,
     content     TEXT,
