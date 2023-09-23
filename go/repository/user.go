@@ -27,6 +27,7 @@ func (r UserRepository) Create(u *models.User) error {
 	if err != nil {
 		return err
 	}
+	defer insert.Close()
 
 	result, err := insert.Exec(u.UserID, u.UserName, u.Email, u.Password)
 	if err != nil {

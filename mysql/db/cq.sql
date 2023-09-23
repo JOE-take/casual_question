@@ -11,6 +11,7 @@ create table Users(
 create table Channels(
     channel_id varchar(256) primary key,
     owner varchar(256) not null,
+    created_at  timestamp default current_timestamp,
     foreign key (owner) references Users(user_id)
 );
 
