@@ -2,8 +2,10 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"os"
 	"time"
 )
 
@@ -31,8 +33,12 @@ func openDB() (*sql.DB, error) {
 	var db *sql.DB
 	var err error
 
+	mysqlUser := os.Getenv("MYSQL_USER")
+	mysqlPassword := os.Getenv("MYSQL_PASSWORD")
+	dbSource := fmt.Sprintf("%s:%s@tcp(CQ-db:3306)/cq", mysqlUser, mysqlPassword)
+
 	for i := 0; i <= MaxRetry; i++ {
-		db, err = sql.Open("mysql", "root:password@tcp(CQ-db:3306)/cq")
+		db, err = sql.Open("mysql", dbSource)
 		if err == nil {
 			break
 		}

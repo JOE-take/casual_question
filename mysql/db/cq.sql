@@ -1,4 +1,3 @@
-create database cq;
 use cq;
 
 create table Users(
