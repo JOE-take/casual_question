@@ -89,5 +89,4 @@ func ValidateRefreshToken(tokenString string) (bool, error) {
 	}
 
 	return false, err
-
 }
