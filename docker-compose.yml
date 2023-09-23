@@ -8,8 +8,7 @@ services:
     build: ./mysql
     ports:
       - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: password
+    env_file: .env
 
   web:
     container_name: CQ-app
@@ -20,6 +19,7 @@ services:
       - ./go:/app
     depends_on:
       - db
+    env_file: .env
 
 volumes:
   mysql-local:
