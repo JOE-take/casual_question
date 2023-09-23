@@ -4,6 +4,8 @@ import (
 	"casual_question/models"
 	"database/sql"
 	"errors"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type RefTokenRepositorier interface {

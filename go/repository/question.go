@@ -3,6 +3,8 @@ package repository
 import (
 	"casual_question/models"
 	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type QuestionRepositorier interface {

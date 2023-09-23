@@ -31,6 +31,8 @@ func NewRouter(db *sql.DB) *gin.Engine {
 	r.GET("/refresh", userController.Refresh)
 
 	r.POST("/channel/new", channelController.MakeChannel)
+	r.GET("/channel/:id", channelController.GetAllQuestions)
+
 	r.POST("/channel/:id/post", questionController.PostQuestion)
 
 	return r

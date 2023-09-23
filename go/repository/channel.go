@@ -7,10 +7,13 @@ import (
 	"math/rand"
 	"strconv"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type ChannelRepositorier interface {
 	CreateUnique(string) (string, error)
+	ReadAllByID(string) ([]models.Question, error)
 }
 
 type ChannelRepository struct {
@@ -54,6 +57,32 @@ func (r ChannelRepository) CreateUnique(owner string) (string, error) {
 	}
 
 	return newID, nil
+}
+
+func (r ChannelRepository) ReadAllByID(channelID string) ([]models.Question, error) {
+	db := r.repo
+	var result []models.Question
+
+	rows, err := db.Query("select channel_id, id, content, created_at from Questions where channel_id = ?", channelID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// 1レコードずつスキャンしてresultに追加
+	for rows.Next() {
+		tmp := models.Question{}
+		var createdAtStr string
+		err := rows.Scan(&tmp.ChannelID, &tmp.ID, &tmp.Content, &createdAtStr)
+		if err != nil {
+			return nil, err
+		}
+
+		tmp.CreatedAt, err = time.Parse("2006-01-02 15:04:05", createdAtStr) // 日時のフォーマットを適切に指定
+		result = append(result, tmp)
+	}
+
+	return result, nil
 }
 
 func createUniqueID(db *sql.DB) (string, error) {
