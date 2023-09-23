@@ -69,8 +69,16 @@ func (con UserController) Refresh(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 	}
 
+	// RefreshTokenをHttpOnlyでCookieに保管
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "Refresh_token",
+		Value:    refreshToken,
+		HttpOnly: true,
+		Path:     "/",
+		SameSite: http.SameSiteStrictMode,
+	})
+
 	c.JSON(http.StatusOK, gin.H{
-		"AccessToken":  newAccessToken,
-		"RefreshToken": newRefreshToken,
+		"AccessToken": newAccessToken,
 	})
 }

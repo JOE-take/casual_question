@@ -19,6 +19,8 @@ services:
       - ./go:/app
     depends_on:
       - db
+    environment:
+      SECRET_KEY: secret_key
     env_file: .env
 
 volumes:

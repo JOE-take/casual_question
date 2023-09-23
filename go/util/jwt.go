@@ -4,10 +4,9 @@ import (
 	"casual_question/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
+	"os"
 	"time"
 )
-
-const jwtSecret = "secret_key?"
 
 type Claims struct {
 	UserID   string
@@ -33,6 +32,7 @@ func GenerateAccessToken(u *models.User) (string, error) {
 		},
 	}
 
+	jwtSecret := os.Getenv("SECRET_KEY")
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString([]byte(jwtSecret))
 
@@ -41,6 +41,7 @@ func GenerateAccessToken(u *models.User) (string, error) {
 
 // ParseAccessToken アクセストークンを解析してClaimsとエラーを返す解析器
 func ParseAccessToken(tokenString string) (*Claims, error) {
+	jwtSecret := os.Getenv("SECRET_KEY")
 	tokenClaims, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtSecret), nil
 	})
@@ -67,6 +68,7 @@ func GenerateRefreshToken() (string, int64, error) {
 		Id:        uuid.NewString(),
 	}
 
+	jwtSecret := os.Getenv("SECRET_KEY")
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString([]byte(jwtSecret))
 
@@ -74,6 +76,7 @@ func GenerateRefreshToken() (string, int64, error) {
 }
 
 func ValidateRefreshToken(tokenString string) (bool, error) {
+	jwtSecret := os.Getenv("SECRET_KEY")
 	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtSecret), nil
 	})
