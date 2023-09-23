@@ -16,7 +16,7 @@ create table Channels(
 
 create table Questions(
     channel_id  varchar(256) not null ,
-    id          int primary key,
+    id          varchar(256) primary key,
     content     TEXT,
     created_at  timestamp default current_timestamp,
     foreign key (channel_id) references Channels(channel_id)
