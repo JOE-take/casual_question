@@ -19,7 +19,7 @@ func NewQuestionRepository(repo *sql.DB) *QuestionRepository {
 
 func (r QuestionRepository) Create(q *models.Question) error {
 	db := r.repo
-	insert, err := db.Prepare("insert into Questions values (?, ?, ?)")
+	insert, err := db.Prepare("insert into Questions (channel_id, id, content) values (?, ?, ?)")
 	if err != nil {
 		return err
 	}

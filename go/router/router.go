@@ -20,11 +20,18 @@ func NewRouter(db *sql.DB) *gin.Engine {
 
 	userRepository := repository.NewUserRepository(db)
 	refTokenRepository := repository.NewRefRepository(db)
+	questionRepository := repository.NewQuestionRepository(db)
+	channelRepository := repository.NewChannelRepository(db)
 	userController := handlers.NewUserController(userRepository, refTokenRepository)
+	questionController := handlers.NewQuestionController(questionRepository)
+	channelController := handlers.NewChannelController(channelRepository)
 
 	r.POST("/signup", userController.Signup)
 	r.POST("/login", userController.Login)
 	r.GET("/refresh", userController.Refresh)
+
+	r.POST("/channel/new", channelController.MakeChannel)
+	r.POST("/channel/:id/post", questionController.PostQuestion)
 
 	return r
 }

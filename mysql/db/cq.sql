@@ -11,12 +11,13 @@ create table Users(
 create table Channels(
     channel_id varchar(256) primary key,
     owner varchar(256) not null,
+    created_at  timestamp default current_timestamp,
     foreign key (owner) references Users(user_id)
 );
 
 create table Questions(
     channel_id  varchar(256) not null ,
-    id          int primary key,
+    id          varchar(256) primary key,
     content     TEXT,
     created_at  timestamp default current_timestamp,
     foreign key (channel_id) references Channels(channel_id)
