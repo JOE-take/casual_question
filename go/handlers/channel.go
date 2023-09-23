@@ -31,3 +31,15 @@ func (con ChannelController) MakeChannel(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
+
+func (con ChannelController) GetAllQuestions(c *gin.Context) {
+	channelID := c.Param("id")
+
+	questions, err := con.channelModelRepository.ReadAllByID(channelID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, questions)
+}
