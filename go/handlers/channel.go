@@ -21,6 +21,7 @@ func (con ChannelController) MakeChannel(c *gin.Context) {
 	err := c.ShouldBindJSON(channel)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	id, err := con.channelModelRepository.CreateUnique(channel.Owner)
