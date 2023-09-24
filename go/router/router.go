@@ -1,6 +1,7 @@
 package router
 
 import (
+	"casual_question/config"
 	"casual_question/handlers"
 	"casual_question/middleware"
 	"casual_question/repository"
@@ -13,7 +14,7 @@ import (
 func NewRouter(db *sql.DB) *gin.Engine {
 	r := gin.Default()
 
-	r.Use(cors.Default())
+	r.Use(cors.New(config.CorsConfig()))
 
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "page not found")
