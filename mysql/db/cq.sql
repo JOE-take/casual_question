@@ -20,6 +20,7 @@ create table Questions(
     content     TEXT,
     created_at  timestamp default current_timestamp,
     foreign key (channel_id) references Channels(channel_id)
+    ON DELETE CASCADE
 );
 
 create table RefreshTokens(
