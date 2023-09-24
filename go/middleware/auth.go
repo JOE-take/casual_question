@@ -23,11 +23,12 @@ func CheckAccessToken(c *gin.Context) {
 
 	// アクセストークンのチェック
 	token := tokenValue[7:]
-	_, err := util.ParseAccessToken(token)
+	claims, err := util.ParseAccessToken(token)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
+	c.Set("user_id", claims.UserID)
 	c.Next()
 }
