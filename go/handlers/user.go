@@ -110,7 +110,7 @@ func (con UserController) Login(c *gin.Context) {
 
 	// RefreshTokenをHttpOnlyでCookieに保管
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "Refresh_token",
+		Name:     "refreshToken",
 		Value:    refreshToken,
 		HttpOnly: true,
 		Path:     "/",
@@ -119,6 +119,8 @@ func (con UserController) Login(c *gin.Context) {
 
 	// AccessTokenはJSONで返す
 	c.JSON(http.StatusOK, gin.H{
-		"AccessToken": accessToken,
+		"accessToken": accessToken,
+		"userName":    existingUser.UserName,
+		"userId":      existingUser.UserID,
 	})
 }

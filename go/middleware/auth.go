@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"casual_question/util"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -8,10 +9,22 @@ import (
 
 func CheckAccessToken(c *gin.Context) {
 
-	// Bearer で始まっているかチェック
-	token := c.GetHeader("Authorization")
-	if token[:7] != "Bearer " {
+	// トークンのバリデーション
+	tokenValue := c.GetHeader("Authorization")
+	if len(tokenValue) < 7 {
+		err := errors.New("wrong token")
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	} else if tokenValue[:7] != "Bearer " {
 		err := errors.New("header value must start with 'Bearer '")
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	// アクセストークンのチェック
+	token := tokenValue[7:]
+	_, err := util.ParseAccessToken(token)
+	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
