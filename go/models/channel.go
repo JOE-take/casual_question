@@ -4,7 +4,7 @@ import "time"
 
 type Channel struct {
 	ChannelID string `db:"channel_id"`
-	Owner     string `db:"owner"`
+	Owner     string `db:"owner" json:"owner"`
 }
 
 type Question struct {
