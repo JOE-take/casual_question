@@ -9,9 +9,13 @@ import (
 
 func CheckAccessToken(c *gin.Context) {
 
-	// Bearer で始まっているかチェック
+	// トークンのバリデーション
 	tokenValue := c.GetHeader("Authorization")
-	if tokenValue[:7] != "Bearer " {
+	if len(tokenValue) < 7 {
+		err := errors.New("wrong token")
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	} else if tokenValue[:7] != "Bearer " {
 		err := errors.New("header value must start with 'Bearer '")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
