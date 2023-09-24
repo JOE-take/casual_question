@@ -120,5 +120,7 @@ func (con UserController) Login(c *gin.Context) {
 	// AccessTokenはJSONで返す
 	c.JSON(http.StatusOK, gin.H{
 		"AccessToken": accessToken,
+		"userName":    existingUser.UserName,
+		"userID":      existingUser.UserID,
 	})
 }
