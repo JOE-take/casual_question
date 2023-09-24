@@ -2,6 +2,7 @@ package router
 
 import (
 	"casual_question/handlers"
+	"casual_question/middleware"
 	"casual_question/repository"
 	"database/sql"
 	"github.com/gin-contrib/cors"
@@ -30,8 +31,12 @@ func NewRouter(db *sql.DB) *gin.Engine {
 	r.POST("/login", userController.Login)
 	r.GET("/refresh", userController.Refresh)
 
-	r.POST("/channel/new", channelController.MakeChannel)
-	r.GET("/channel/:id", channelController.GetAllQuestions)
+	restricted := r.Group("")
+	{
+		restricted.Use(middleware.CheckAccessToken)
+		restricted.POST("/channel/new", channelController.MakeChannel)
+		restricted.GET("/channel/:id", channelController.GetAllQuestions)
+	}
 
 	r.POST("/channel/:id/post", questionController.PostQuestion)
 
