@@ -14,6 +14,7 @@ import (
 type ChannelRepositorier interface {
 	CreateUnique(string) (string, error)
 	ReadAllByID(string) ([]models.Question, error)
+	GetOwnerByChannelID(string) (string, error)
 }
 
 type ChannelRepository struct {
@@ -87,6 +88,16 @@ func (r ChannelRepository) ReadAllByID(channelID string) ([]models.Question, err
 		result = append(result, tmp)
 	}
 	return result, nil
+}
+
+func (r ChannelRepository) GetOwnerByChannelID(channelID string) (string, error) {
+	var ownerID string
+	row := r.repo.QueryRow("select owner from Channels where channel_id = ?", channelID)
+	if err := row.Scan(&ownerID); err != nil {
+		return "", err
+	}
+
+	return ownerID, nil
 }
 
 func createUniqueID(db *sql.DB) (string, error) {
