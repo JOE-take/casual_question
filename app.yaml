@@ -20,4 +20,3 @@ env_variables:
   CLOUD-SQL_PASS: password
   CLOUD-SQL_NAME: example
   CLOUD-SQL_DBNAME: db_name
-
