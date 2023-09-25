@@ -87,7 +87,8 @@ func (r ChannelRepository) ReadAllByID(channelID string) ([]models.Question, err
 
 func createUniqueID(db *sql.DB) (string, error) {
 
-	// 新しいIDが見つかるまで回す タイムアウトを実装するべき？
+	// 新しいIDが見つかるまで回す
+	var counter int
 	for {
 		seed := time.Now().UnixNano()
 		random := rand.New(rand.NewSource(seed))
@@ -104,6 +105,12 @@ func createUniqueID(db *sql.DB) (string, error) {
 
 		if err != nil {
 			return "0", err
+		}
+
+		// 1000回やって見つからなかったらストップ
+		counter++
+		if counter > 1000 {
+			return "", errors.New("can't create channelID")
 		}
 	}
 }
