@@ -16,7 +16,7 @@ automatic_scaling:
 
 env_variables:
   SECRET_KEY: secret_key
-  CLOUD-SQL_USER: user
-  CLOUD-SQL_PASS: password
-  CLOUD-SQL_NAME: example
-  CLOUD-SQL_DBNAME: db_name
+  CLOUD_SQL_USER: user
+  CLOUD_SQL_PASS: password
+  CLOUD_SQL_NAME: example
+  CLOUD_SQL_DBNAME: db_name
