@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "casual_chat",
+    "title": "casual_question",
     "description": "",
     "version": "1.0.0"
   },
