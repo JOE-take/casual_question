@@ -1,0 +1,536 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "casual_chat",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "channel"
+    }
+  ],
+  "paths": {
+    "/signup": {
+      "post": {
+        "summary": "サインアップ",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_name": {
+                    "type": "string",
+                    "faker": "internet.userName"
+                  },
+                  "email": {
+                    "type": "string",
+                    "faker": "internet.email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "faker": "internet.password"
+                  }
+                },
+                "x-apidog-orders": [
+                  "user_name",
+                  "email",
+                  "password"
+                ],
+                "required": [
+                  "user_name",
+                  "email",
+                  "password"
+                ],
+                "x-apidog-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "error"
+                  ],
+                  "required": [
+                    "error"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4191513-run"
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "ログイン",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "faker": "internet.email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "faker": "internet.password"
+                  }
+                },
+                "x-apidog-orders": [
+                  "email",
+                  "password"
+                ],
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "x-apidog-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "userName": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "accessToken",
+                    "userName",
+                    "userId"
+                  ],
+                  "required": [
+                    "accessToken",
+                    "userName",
+                    "userId"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "不正なRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "error"
+                  ],
+                  "required": [
+                    "error"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "サーバーエラー",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "error"
+                  ],
+                  "required": [
+                    "error"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4191516-run"
+      }
+    },
+    "/refresh": {
+      "get": {
+        "summary": "アクセストークンのリフレッシュ",
+        "x-apidog-folder": "",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "cookie",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4191517-run"
+      }
+    },
+    "/channel/new": {
+      "post": {
+        "summary": "チャンネル作成",
+        "x-apidog-folder": "channel",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "channel"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "owner": {
+                    "type": "string"
+                  }
+                },
+                "x-apidog-orders": [
+                  "owner"
+                ],
+                "required": [
+                  "owner"
+                ],
+                "x-apidog-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "チャンネルのID"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "id"
+                  ],
+                  "required": [
+                    "id"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "error"
+                  ],
+                  "required": [
+                    "error"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "権限なし",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "error"
+                  ],
+                  "required": [
+                    "error"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4296229-run"
+      }
+    },
+    "/channel/{id}": {
+      "get": {
+        "summary": "質問の取得",
+        "x-apidog-folder": "channel",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "channel"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "type": "string"
+                      },
+                      "ChannelID": {
+                        "type": "integer"
+                      },
+                      "Content": {
+                        "type": "string"
+                      },
+                      "CreatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "x-apidog-orders": [
+                      "ID",
+                      "ChannelID",
+                      "Content",
+                      "CreatedAt"
+                    ],
+                    "required": [
+                      "ID",
+                      "ChannelID",
+                      "Content",
+                      "CreatedAt"
+                    ],
+                    "x-apidog-ignore-properties": []
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "error"
+                  ],
+                  "required": [
+                    "error"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4296244-run"
+      }
+    },
+    "/channel/{id}/post": {
+      "post": {
+        "summary": "質問の送信",
+        "x-apidog-folder": "channel",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "channel"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-orders": [
+                    "01HB6G7K2CBRTNV9XZSB6JFWY6"
+                  ],
+                  "required": [
+                    "01HB6G7K2CBRTNV9XZSB6JFWY6"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apidog-orders": [
+                    "error"
+                  ],
+                  "required": [
+                    "error"
+                  ],
+                  "x-apidog-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4296246-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  },
+  "servers": []
+}
