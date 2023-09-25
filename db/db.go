@@ -33,9 +33,14 @@ func openDB() (*sql.DB, error) {
 	var db *sql.DB
 	var err error
 
-	mysqlUser := os.Getenv("MYSQL_USER")
-	mysqlPassword := os.Getenv("MYSQL_PASSWORD")
-	dbSource := fmt.Sprintf("%s:%s@tcp(CQ-db:3306)/cq", mysqlUser, mysqlPassword)
+	//mysqlUser := os.Getenv("MYSQL_USER")
+	//mysqlPassword := os.Getenv("MYSQL_PASSWORD")
+	//dbSource := fmt.Sprintf("%s:%s@tcp(CQ-db:3306)/cq", mysqlUser, mysqlPassword)
+	dbUser := os.Getenv("CLOUD-SQL_USER")
+	dbPass := os.Getenv("CLOUD-SQL_PASS")
+	cloudName := os.Getenv("CLOUD-SQL_NAME")
+	dbName := os.Getenv("CLOUD-SQL_DBNAME")
+	dbSource := fmt.Sprintf("%s:%s@unix(/cloudsql/%s)/%s?parseTime=true", dbUser, dbPass, cloudName, dbName)
 
 	for i := 0; i <= MaxRetry; i++ {
 		db, err = sql.Open("mysql", dbSource)
