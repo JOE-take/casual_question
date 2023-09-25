@@ -8,7 +8,7 @@ import (
 func CorsConfig() cors.Config {
 	c := cors.Config{
 		AllowOrigins: []string{
-			"http://localhost:3000",
+			"https://joe-take.github.io",
 		},
 
 		AllowMethods: []string{
