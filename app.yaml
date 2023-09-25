@@ -1,0 +1,22 @@
+runtime: go121
+
+env: standard
+
+instance_class: F1
+automatic_scaling:
+  target_cpu_utilization: 0.95
+  target_throughput_utilization: 0.95
+  min_idle_instances: 0
+  max_idle_instances: 1
+  min_instances: 0
+  max_instances: 1
+  min_pending_latency: 5000ms
+  max_pending_latency: automatic
+  max_concurrent_requests: 80
+
+env_variables:
+  SECRET_KEY: secret_key
+  CLOUD-SQL_USER: user
+  CLOUD-SQL_PASS: password
+  CLOUD-SQL_NAME: example
+  CLOUD-SQL_DBNAME: db_name

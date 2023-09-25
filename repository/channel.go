@@ -14,6 +14,7 @@ import (
 type ChannelRepositorier interface {
 	CreateUnique(string) (string, error)
 	ReadAllByID(string) ([]models.Question, error)
+	GetOwnerByChannelID(string) (string, error)
 }
 
 type ChannelRepository struct {
@@ -73,21 +74,36 @@ func (r ChannelRepository) ReadAllByID(channelID string) ([]models.Question, err
 	for rows.Next() {
 		tmp := models.Question{}
 		var createdAtStr string
+
 		err := rows.Scan(&tmp.ChannelID, &tmp.ID, &tmp.Content, &createdAtStr)
 		if err != nil {
 			return nil, err
 		}
 
-		tmp.CreatedAt, err = time.Parse("2006-01-02 15:04:05", createdAtStr) // 日時のフォーマットを適切に指定
+		tmp.CreatedAt, err = time.Parse(time.RFC3339, createdAtStr) // レイアウトがRFC3339であることを期待
+		if err != nil {
+			return nil, err
+		}
+
 		result = append(result, tmp)
 	}
-
 	return result, nil
+}
+
+func (r ChannelRepository) GetOwnerByChannelID(channelID string) (string, error) {
+	var ownerID string
+	row := r.repo.QueryRow("select owner from Channels where channel_id = ?", channelID)
+	if err := row.Scan(&ownerID); err != nil {
+		return "", err
+	}
+
+	return ownerID, nil
 }
 
 func createUniqueID(db *sql.DB) (string, error) {
 
-	// 新しいIDが見つかるまで回す タイムアウトを実装するべき？
+	// 新しいIDが見つかるまで回す
+	var counter int
 	for {
 		seed := time.Now().UnixNano()
 		random := rand.New(rand.NewSource(seed))
@@ -104,6 +120,12 @@ func createUniqueID(db *sql.DB) (string, error) {
 
 		if err != nil {
 			return "0", err
+		}
+
+		// 1000回やって見つからなかったらストップ
+		counter++
+		if counter > 1000 {
+			return "", errors.New("can't create channelID")
 		}
 	}
 }

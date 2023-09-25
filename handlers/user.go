@@ -114,7 +114,8 @@ func (con UserController) Login(c *gin.Context) {
 		Value:    refreshToken,
 		HttpOnly: true,
 		Path:     "/",
-		SameSite: http.SameSiteStrictMode,
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 	})
 
 	// AccessTokenはJSONで返す

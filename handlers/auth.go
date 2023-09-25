@@ -4,22 +4,23 @@ import (
 	"casual_question/models"
 	"casual_question/util"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func (con UserController) Refresh(c *gin.Context) {
 
-	// Bearer で始まっているかチェック
-	token := c.GetHeader("Authorization")
-	if token[:7] != "Bearer " {
-		err := errors.New("header value must start with 'Bearer '")
+	// リフレッシュトークンの取得
+	refreshToken, err := c.Cookie("refreshToken")
+	fmt.Println(refreshToken)
+	if err != nil {
+		err := errors.New("token are not here")
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
 	// リフレッシュトークンのチェック
-	refreshToken := token[7:]
 	ok, err := util.ValidateRefreshToken(refreshToken)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
@@ -72,10 +73,11 @@ func (con UserController) Refresh(c *gin.Context) {
 	// RefreshTokenをHttpOnlyでCookieに保管
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     "refreshToken",
-		Value:    refreshToken,
+		Value:    newRefreshToken,
 		HttpOnly: true,
 		Path:     "/",
-		SameSite: http.SameSiteStrictMode,
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 	})
 
 	c.JSON(http.StatusOK, gin.H{

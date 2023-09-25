@@ -3,6 +3,7 @@ package handlers
 import (
 	"casual_question/models"
 	"casual_question/repository"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -35,6 +36,17 @@ func (con ChannelController) MakeChannel(c *gin.Context) {
 
 func (con ChannelController) GetAllQuestions(c *gin.Context) {
 	channelID := c.Param("id")
+	ownerID, err := con.channelModelRepository.GetOwnerByChannelID(channelID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	userID := c.GetString("user_id")
+	if ownerID != userID {
+		err := errors.New("no permission to see this")
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	questions, err := con.channelModelRepository.ReadAllByID(channelID)
 	if err != nil {
