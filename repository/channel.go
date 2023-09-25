@@ -73,15 +73,19 @@ func (r ChannelRepository) ReadAllByID(channelID string) ([]models.Question, err
 	for rows.Next() {
 		tmp := models.Question{}
 		var createdAtStr string
+
 		err := rows.Scan(&tmp.ChannelID, &tmp.ID, &tmp.Content, &createdAtStr)
 		if err != nil {
 			return nil, err
 		}
 
-		tmp.CreatedAt, err = time.Parse("2006-01-02 15:04:05", createdAtStr) // 日時のフォーマットを適切に指定
+		tmp.CreatedAt, err = time.Parse(time.RFC3339, createdAtStr) // レイアウトがRFC3339であることを期待
+		if err != nil {
+			return nil, err
+		}
+
 		result = append(result, tmp)
 	}
-
 	return result, nil
 }
 
