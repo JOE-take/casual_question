@@ -103,8 +103,9 @@ func (r ChannelRepository) GetOwnerByChannelID(channelID string) (string, error)
 
 func (r ChannelRepository) CheckExistence(channelID string) error {
 	row := r.repo.QueryRow("select * from Channels where channel_id = ?", channelID)
-	if row.Err() != nil {
-		return row.Err()
+	err := row.Scan()
+	if err != nil {
+		return err
 	}
 
 	return nil
