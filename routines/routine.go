@@ -12,7 +12,7 @@ type RoutineInfo struct {
 
 func ControlRoutines(info RoutineInfo) {
 	for {
-		time.Sleep(12 * time.Hour)
+		time.Sleep(2 * time.Hour)
 		deleteExpiredChannels(info.DB)
 		deleteExpiredRefreshTokens(info.DB)
 	}
@@ -20,7 +20,7 @@ func ControlRoutines(info RoutineInfo) {
 
 // 24時間経過したチャンネルを削除
 func deleteExpiredChannels(db *sql.DB) {
-	delete, err := db.Prepare("DELETE FROM Channels WHERE TIMESTAMPDIFF(HOUR, createdAt, NOW()) >= 24")
+	delete, err := db.Prepare("DELETE FROM Channels WHERE TIMESTAMPDIFF(HOUR, created_at, NOW()) >= 24")
 	if err != nil {
 		log.Println(err)
 		return

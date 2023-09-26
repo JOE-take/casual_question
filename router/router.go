@@ -39,6 +39,7 @@ func NewRouter(db *sql.DB) *gin.Engine {
 		restricted.GET("/channel/:id", channelController.GetAllQuestions)
 	}
 
+	r.GET("/channel/:id/exist", channelController.CheckExistence)
 	r.POST("/channel/:id/post", questionController.PostQuestion)
 
 	return r

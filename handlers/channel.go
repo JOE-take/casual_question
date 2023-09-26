@@ -3,6 +3,7 @@ package handlers
 import (
 	"casual_question/models"
 	"casual_question/repository"
+	"database/sql"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -55,4 +56,21 @@ func (con ChannelController) GetAllQuestions(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, questions)
+}
+
+func (con ChannelController) CheckExistence(c *gin.Context) {
+	channelID := c.Param("id")
+
+	err := con.channelModelRepository.CheckExistence(channelID)
+
+	switch err {
+	case nil:
+		c.JSON(http.StatusOK, gin.H{})
+	case sql.ErrNoRows:
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	default:
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	return
 }
