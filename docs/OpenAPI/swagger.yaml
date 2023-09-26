@@ -527,6 +527,71 @@
         },
         "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4296246-run"
       }
+    },
+    "/channel/{id}/exist": {
+      "get": {
+        "summary": "チャンネルの存在確認",
+        "x-apidog-folder": "channel",
+        "x-apidog-status": "released",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "channel"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "チャンネルが存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "失敗",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "チャンネルが存在しない",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apidog-ignore-properties": [],
+                  "x-apidog-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apidog": "https://apidog.com/web/project/384370/apis/api-4303894-run"
+      }
     }
   },
   "components": {
