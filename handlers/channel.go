@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"casual_question/models"
 	"casual_question/repository"
 	"database/sql"
 	"errors"
@@ -18,15 +17,11 @@ func NewChannelController(channelRepo repository.ChannelRepositorier) *ChannelCo
 }
 
 func (con ChannelController) MakeChannel(c *gin.Context) {
-	channel := &models.Channel{}
 
-	err := c.ShouldBindJSON(channel)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	// トークンのClaimから得たuserIDを取得
+	ownerID := c.GetString("user_id")
 
-	id, err := con.channelModelRepository.CreateUnique(channel.Owner)
+	id, err := con.channelModelRepository.CreateUnique(ownerID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
