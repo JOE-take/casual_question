@@ -19,7 +19,7 @@ func NewChannelController(channelRepo repository.ChannelRepositorier) *ChannelCo
 func (con ChannelController) MakeChannel(c *gin.Context) {
 
 	// トークンのClaimから得たuserIDを取得
-	ownerID := c.GetString("user_id")
+	ownerID := c.GetString("userID")
 
 	id, err := con.channelModelRepository.CreateUnique(ownerID)
 	if err != nil {
@@ -32,12 +32,13 @@ func (con ChannelController) MakeChannel(c *gin.Context) {
 
 func (con ChannelController) GetAllQuestions(c *gin.Context) {
 	channelID := c.Param("id")
+	userID := c.GetString("userID")
+
 	ownerID, err := con.channelModelRepository.GetOwnerByChannelID(channelID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	userID := c.GetString("user_id")
 	if ownerID != userID {
 		err := errors.New("no permission to see this")
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
