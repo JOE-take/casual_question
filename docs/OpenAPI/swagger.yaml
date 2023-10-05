@@ -277,27 +277,6 @@
           "channel"
         ],
         "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "owner": {
-                    "type": "string"
-                  }
-                },
-                "x-apidog-orders": [
-                  "owner"
-                ],
-                "required": [
-                  "owner"
-                ],
-                "x-apidog-ignore-properties": []
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "成功",
