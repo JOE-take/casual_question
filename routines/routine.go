@@ -12,9 +12,9 @@ type RoutineInfo struct {
 
 func ControlRoutines(info RoutineInfo) {
 	for {
-		time.Sleep(2 * time.Hour)
 		deleteExpiredChannels(info.DB)
 		deleteExpiredRefreshTokens(info.DB)
+		time.Sleep(2 * time.Hour)
 	}
 }
 
@@ -30,6 +30,7 @@ func deleteExpiredChannels(db *sql.DB) {
 		log.Println(err)
 		return
 	}
+	log.Println("routine: Delete expired channels.")
 }
 
 func deleteExpiredRefreshTokens(db *sql.DB) {
@@ -44,4 +45,5 @@ func deleteExpiredRefreshTokens(db *sql.DB) {
 		log.Println(err)
 		return
 	}
+	log.Println("routine: Delete expired refresh tokens.")
 }
