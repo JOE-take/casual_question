@@ -25,6 +25,7 @@ func deleteExpiredChannels(db *sql.DB) {
 		log.Println(err)
 		return
 	}
+  
 	_, err = deletePrepare.Exec()
 	if err != nil {
 		log.Println(err)
