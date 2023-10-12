@@ -20,12 +20,12 @@ func ControlRoutines(info RoutineInfo) {
 
 // 24時間経過したチャンネルを削除
 func deleteExpiredChannels(db *sql.DB) {
-	delete, err := db.Prepare("DELETE FROM Channels WHERE TIMESTAMPDIFF(HOUR, created_at, NOW()) >= 24")
+	deletePrepare, err := db.Prepare("DELETE FROM Channels WHERE TIMESTAMPDIFF(HOUR, created_at, NOW()) >= 24")
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	_, err = delete.Exec(time.Now())
+	_, err = deletePrepare.Exec()
 	if err != nil {
 		log.Println(err)
 		return
